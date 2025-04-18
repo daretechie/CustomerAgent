@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Service AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="business-name" id="dynamic-business-name">
+                {# Jinja2 variable to insert the business name #}
+                {{ business_name }}
+            </div>
+
+            <div class="navigation">
+                <button class="nav-button">FAQs</button>
+                <button class="nav-button">Products Doc</button>
+                <button class="nav-button upload">Upload Doc</button>
+            </div>
+
+            <div class="add-info">
+                Add More information
+            </div>
+        </div>
+
+        <div class="chat-area">
+            <div class="chat-header">
+                AI Customer Support Agent
+            </div>
+            <div class="chat-messages" id="chat-box">
+                </div>
+            <div class="input-area">
+                <input type="text" class="message-input" placeholder="Type your message...">
+                <button class="send-button">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

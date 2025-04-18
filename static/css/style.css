@@ -1,0 +1,148 @@
+
+
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0; /* Light grey background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    display: flex;
+    width: 90%; /* Adjust width as needed */
+    max-width: 1200px; /* Max width for larger screens */
+    background-color: #ffffff; /* White background for the main container */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Ensures rounded corners are respected */
+}
+
+.sidebar {
+    width: 30%; /* Adjust sidebar width */
+    background-color: #e0e0e0; /* Grey background for sidebar */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.business-name {
+    font-size: 1.2em;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #cccccc; /* Slightly darker grey for business name area */
+    border-radius: 5px;
+    text-align: center;
+}
+
+.navigation {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.nav-button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+    background-color: #d0d0d0; /* Default button color */
+}
+
+.nav-button:hover {
+    background-color: #c0c0c0; /* Hover effect */
+}
+
+.nav-button.upload {
+    background-color: #ffc107; /* Yellow color for upload button */
+    font-weight: 500;
+}
+
+.nav-button.upload:hover {
+     background-color: #ffb300; /* Darker yellow on hover */
+}
+
+.add-info {
+    font-size: 1em;
+    color: #555; /* Darker grey for text */
+}
+
+.chat-area {
+    flex-grow: 1; /* Chat area takes remaining space */
+    background-color: #ffffd0; /* Light yellow background for chat area */
+    display: flex;
+    flex-direction: column;
+    position: relative; /* Needed for positioning the send button */
+}
+
+.chat-header {
+    padding: 15px;
+    background-color: #ffeb3b; /* Yellow header */
+    font-weight: 600;
+    text-align: center;
+    border-bottom: 1px solid #fbc02d; /* Darker yellow border */
+}
+
+.chat-messages {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto; /* Enable scrolling if messages exceed height */
+    /* No initial messages as per request */
+}
+
+.input-area {
+    display: flex;
+    padding: 15px;
+    background-color: #ffeb3b; /* Yellow background for input area */
+    border-top: 1px solid #fbc02d; /* Darker yellow border */
+    align-items: center;
+}
+
+.message-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    font-size: 1em;
+}
+
+.send-button {
+    padding: 10px 20px;
+    background-color: #ff9800; /* Orange color for send button */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.send-button:hover {
+    background-color: #f57c00; /* Darker orange on hover */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        width: 95%;
+    }
+
+    .sidebar {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .chat-area {
+        width: 100%;
+    }
+}
