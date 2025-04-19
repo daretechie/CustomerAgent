@@ -20,9 +20,5 @@ def index():
     # Render the index.html template and pass the business name
     return render_template('index.html', business_name=dynamic_business_name)
 
-# This block allows you to run the Flask development server directly
-# when you execute this script.
 if __name__ == '__main__':
-    # Run the app in debug mode, which provides helpful error messages
-    # and automatically reloads the server on code changes.
     app.run(debug=True)
