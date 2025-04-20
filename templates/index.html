@@ -11,15 +11,14 @@
     <div class="container">
         <div class="sidebar">
             <div class="business-name" id="dynamic-business-name">
-                {# Jinja2 variable to insert the business name #}
                 {{ business_name }}
             </div>
 
             <div class="navigation">
-                <button class="nav-button">FAQs</button>
-                <button class="nav-button">Products Doc</button>
-                <button class="nav-button upload">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="display: inline-block; vertical-align: text-bottom; margin-right: 5px;" viewBox="0 0 16 16">
+                <button class="nav-button" id="faq-button">FAQs</button>
+                <button class="nav-button" id="products-button">Products Doc</button>
+                <button class="nav-button upload" id="upload-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                         <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
                         <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
                     </svg>
@@ -37,9 +36,20 @@
                 AI Customer Support Agent
                 <div class="chat-header-menu">⋮</div>
             </div>
+            
+            <!-- Content display area -->
+            <div class="content-area" id="content-area">
+                <!-- This will show FAQs, product docs, upload forms -->
+                <div id="faq-content" class="content-section hidden"></div>
+                <div id="products-content" class="content-section hidden"></div>
+                <div id="upload-content" class="content-section hidden"></div>
+            </div>
+            
+            <!-- Chat display area -->
             <div class="chat-messages" id="chat-box">
                 <!-- Chat messages will be added here dynamically -->
             </div>
+            
             <div class="input-area">
                 <input type="text" class="message-input" placeholder="Type your message...">
                 <button class="send-button">Send</button>

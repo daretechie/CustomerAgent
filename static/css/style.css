@@ -109,6 +109,27 @@ body {
     font-size: 1.5em;
 }
 
+/* Content area for FAQs, Products, Upload Form */
+.content-area {
+    display: none; /* Hidden by default */
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #ffffd0;
+}
+
+.content-area.active {
+    display: block;
+}
+
+.content-section {
+    display: none;
+}
+
+.content-section.active {
+    display: block;
+}
+
 .chat-messages {
     flex-grow: 1;
     padding: 20px;
@@ -117,6 +138,7 @@ body {
     flex-direction: column;
     gap: 15px;
     scroll-behavior: smooth;
+    background-color: #ffffd0;
 }
 
 .message {
@@ -126,4 +148,182 @@ body {
     font-size: 0.95em;
     line-height: 1.4;
     word-wrap: break-word;
-    box-shadow: 0 1px 2px rgba(0,0
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.user-message {
+    align-self: flex-end;
+    background-color: #dcf8c6; /* Light green for user messages */
+    margin-left: auto;
+}
+
+.ai-message {
+    align-self: flex-start;
+    background-color: #ffffff; /* White for AI messages */
+    margin-right: auto; 
+}
+
+.input-area {
+    display: flex;
+    padding: 15px;
+    border-top: 1px solid #fbc02d;
+    background-color: #ffeb3b; /* Yellow footer */
+}
+
+.message-input {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 0.95em;
+    outline: none;
+}
+
+.send-button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    background-color: #ffcc00; /* Bold yellow button */
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.send-button:hover {
+    background-color: #ffbb00; /* Darker on hover */
+}
+
+/* FAQ Items Styling */
+.faq-item {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.faq-question {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.faq-answer {
+    color: #555;
+}
+
+/* Upload Form Styling */
+.upload-form-container {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.form-group input[type="text"],
+.form-group input[type="file"] {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 5px;
+    color: #777;
+    font-size: 0.8em;
+}
+
+.upload-submit-btn {
+    background-color: #ffc107;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.upload-submit-btn:hover {
+    background-color: #ffb300;
+}
+
+.upload-status {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    border-radius: 4px;
+    background-color: #333;
+    color: #fff;
+    display: none;
+    z-index: 1000;
+}
+
+.upload-status.success {
+    background-color: #4caf50;
+}
+
+.upload-status.error {
+    background-color: #f44336;
+}
+
+/* Utility Classes */
+.hidden {
+    display: none;
+}
+
+/* Typing indicator */
+.typing-indicator {
+    display: flex;
+    align-items: center;
+}
+
+.typing-indicator span {
+    height: 8px;
+    width: 8px;
+    margin: 0 2px;
+    background-color: #888;
+    border-radius: 50%;
+    opacity: 0.4;
+    animation: typing-dot 1.4s infinite both;
+}
+
+.typing-indicator span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typing-dot {
+    0%, 60%, 100% {
+        transform: translateY(0);
+    }
+    30% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Info message styling */
+.info-message {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}

@@ -1,13 +1,18 @@
 // DOM elements
 const chatBox = document.getElementById('chat-box');
+const contentArea = document.getElementById('content-area');
+const faqContent = document.getElementById('faq-content');
+const productsContent = document.getElementById('products-content');
+const uploadContent = document.getElementById('upload-content');
 const messageInput = document.querySelector('.message-input');
 const sendButton = document.querySelector('.send-button');
-const faqButton = document.querySelector('.nav-button:nth-child(1)');
-const productsButton = document.querySelector('.nav-button:nth-child(2)');
-const uploadButton = document.querySelector('.nav-button.upload');
+const faqButton = document.getElementById('faq-button');
+const productsButton = document.getElementById('products-button');
+const uploadButton = document.getElementById('upload-button');
 
 // State
 let isProcessingMessage = false;
+let currentView = 'chat'; // chat, faq, products, upload
 
 // Event listeners
 sendButton.addEventListener('click', sendMessage);
@@ -17,8 +22,8 @@ messageInput.addEventListener('keypress', function(e) {
     }
 });
 faqButton.addEventListener('click', showFAQs);
-uploadButton.addEventListener('click', showUploadForm);
 productsButton.addEventListener('click', showProductInfo);
+uploadButton.addEventListener('click', showUploadForm);
 
 // Add welcome message from AI
 function addWelcomeMessage() {
@@ -44,10 +49,44 @@ window.onload = function() {
     document.body.appendChild(uploadStatus);
 };
 
+// Function to switch views
+function switchView(viewName) {
+    // Hide all content sections
+    faqContent.classList.remove('active');
+    productsContent.classList.remove('active');
+    uploadContent.classList.remove('active');
+    
+    if (viewName === 'chat') {
+        // Show chat, hide content area
+        chatBox.style.display = 'flex';
+        contentArea.style.display = 'none';
+    } else {
+        // Hide chat, show content area
+        chatBox.style.display = 'none';
+        contentArea.style.display = 'block';
+        
+        // Show the specific content section
+        if (viewName === 'faq') {
+            faqContent.classList.add('active');
+        } else if (viewName === 'products') {
+            productsContent.classList.add('active');
+        } else if (viewName === 'upload') {
+            uploadContent.classList.add('active');
+        }
+    }
+    
+    currentView = viewName;
+}
+
 // Function to send a message
 async function sendMessage() {
     const message = messageInput.value.trim();
     if (!message || isProcessingMessage) return;
+    
+    // If in another view, switch back to chat
+    if (currentView !== 'chat') {
+        switchView('chat');
+    }
     
     // Show that we're processing
     isProcessingMessage = true;
@@ -113,9 +152,11 @@ function addMessage(text, sender) {
 
 // Function to show FAQs
 async function showFAQs() {
+    switchView('faq');
+    
     try {
         // Show loading state
-        chatBox.innerHTML = '<div class="loading-indicator">Loading FAQs...</div>';
+        faqContent.innerHTML = '<div class="loading-indicator">Loading FAQs...</div>';
         
         const response = await fetch('/get_faqs');
         if (!response.ok) {
@@ -124,54 +165,88 @@ async function showFAQs() {
         
         const data = await response.json();
         
-        chatBox.innerHTML = ''; // Clear chat
-        addMessage("Here are our most frequently asked questions:", 'ai');
+        faqContent.innerHTML = '<h2>Frequently Asked Questions</h2>';
         
         if (data.faqs && data.faqs.length > 0) {
             data.faqs.forEach((faq, index) => {
                 const faqElement = document.createElement('div');
                 faqElement.className = 'faq-item';
-                faqElement.innerHTML = `<strong>${index + 1}. ${faq.question}</strong><br>${faq.answer}`;
-                chatBox.appendChild(faqElement);
+                faqElement.innerHTML = `
+                    <div class="faq-question">${index + 1}. ${faq.question}</div>
+                    <div class="faq-answer">${faq.answer}</div>
+                `;
+                faqContent.appendChild(faqElement);
             });
         } else {
             const noFaqsElement = document.createElement('div');
             noFaqsElement.className = 'info-message';
             noFaqsElement.textContent = "No FAQs available yet. Upload business documents to generate FAQs.";
-            chatBox.appendChild(noFaqsElement);
+            faqContent.appendChild(noFaqsElement);
         }
-        
-        addMessage("Do you have any other questions I can help with?", 'ai');
     } catch (error) {
         console.error('Error fetching FAQs:', error);
-        chatBox.innerHTML = '';
-        addMessage("Sorry, I couldn't retrieve the FAQs at this time.", 'ai');
+        faqContent.innerHTML = '<div class="info-message">Sorry, I couldn\'t retrieve the FAQs at this time.</div>';
     }
 }
 
 // Function to show product information
-function showProductInfo() {
-    chatBox.innerHTML = ''; // Clear chat
+async function showProductInfo() {
+    switchView('products');
     
-    const productInfoElement = document.createElement('div');
-    productInfoElement.className = 'info-message';
-    productInfoElement.innerHTML = `
-        <h3>Product Information</h3>
-        <p>To view product information, please upload your product catalog using the "Upload Doc" button.</p>
-        <p>Once uploaded, I'll be able to answer specific questions about your products.</p>
-    `;
-    chatBox.appendChild(productInfoElement);
-    
-    addMessage("Is there anything specific you'd like to know about your products?", 'ai');
+    try {
+        // Show loading state
+        productsContent.innerHTML = '<div class="loading-indicator">Loading Product Information...</div>';
+        
+        const response = await fetch('/get_products');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        
+        const data = await response.json();
+        
+        productsContent.innerHTML = '<h2>Product Information</h2>';
+        
+        if (data.products && data.products.length > 0) {
+            const productsList = document.createElement('div');
+            productsList.className = 'products-list';
+            
+            data.products.forEach(product => {
+                const productItem = document.createElement('div');
+                productItem.className = 'faq-item'; // Reusing the styling
+                productItem.innerHTML = `
+                    <div class="faq-question">${product.name}</div>
+                    <div class="faq-answer">
+                        <p>${product.description}</p>
+                        <p><strong>Price:</strong> ${product.price}</p>
+                    </div>
+                `;
+                productsList.appendChild(productItem);
+            });
+            
+            productsContent.appendChild(productsList);
+        } else {
+            const noProductsElement = document.createElement('div');
+            noProductsElement.className = 'info-message';
+            noProductsElement.innerHTML = `
+                <p>No product information available yet.</p>
+                <p>To view product information, please upload your product catalog using the "Upload Doc" button.</p>
+                <p>Once uploaded, I'll be able to display specific information about your products.</p>
+            `;
+            productsContent.appendChild(noProductsElement);
+        }
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        productsContent.innerHTML = '<div class="info-message">Sorry, I couldn\'t retrieve the product information at this time.</div>';
+    }
 }
 
 // Function to show upload form
 function showUploadForm() {
-    chatBox.innerHTML = ''; // Clear chat
+    switchView('upload');
     
     const uploadFormHTML = `
         <div class="upload-form-container">
-            <h3>Upload Business Documents</h3>
+            <h2>Upload Business Documents</h2>
             <p>Upload your business documents to enhance my knowledge about your business and products.</p>
             <form id="fileUploadForm" enctype="multipart/form-data">
                 <div class="form-group">
@@ -189,10 +264,7 @@ function showUploadForm() {
         </div>
     `;
     
-    const formContainer = document.createElement('div');
-    formContainer.className = 'upload-area';
-    formContainer.innerHTML = uploadFormHTML;
-    chatBox.appendChild(formContainer);
+    uploadContent.innerHTML = uploadFormHTML;
 }
 
 // Function to handle file upload
@@ -225,10 +297,22 @@ async function handleFileUpload(e) {
             // Update the business name in the UI
             document.getElementById('dynamic-business-name').textContent = data.business_name;
             
-            // Clear chat and add success message
-            chatBox.innerHTML = '';
-            addMessage(`Upload successful! I've updated the business information for ${data.business_name}.`, 'ai');
-            addMessage("I'm processing your document to better understand your business. This may take a moment. You can view FAQs by clicking the FAQ button once processing is complete.", 'ai');
+            // Update the upload form with success message
+            uploadContent.innerHTML = `
+                <div class="info-message success">
+                    <h3>Upload Successful!</h3>
+                    <p>I've updated the business information for ${data.business_name}.</p>
+                    <p>Your document is being processed to better understand your business. This may take a moment.</p>
+                    <p>You can view FAQs by clicking the FAQ button once processing is complete.</p>
+                </div>
+            `;
+            
+            // Switch to chat view after delay
+            setTimeout(() => {
+                switchView('chat');
+                addMessage(`Upload successful! I've updated the business information for ${data.business_name}.`, 'ai');
+                addMessage("I'm processing your document to better understand your business. This may take a moment. You can view FAQs by clicking the FAQ button once processing is complete.", 'ai');
+            }, 2000);
             
             // Hide status after delay
             setTimeout(() => {
@@ -242,7 +326,14 @@ async function handleFileUpload(e) {
         uploadStatus.textContent = `Upload failed: ${error.message}`;
         uploadStatus.className = 'upload-status error';
         
-        addMessage(`Sorry, there was an error uploading your file: ${error.message}. Please try again.`, 'ai');
+        uploadContent.innerHTML = `
+            <div class="info-message error">
+                <h3>Upload Failed</h3>
+                <p>Sorry, there was an error uploading your file: ${error.message}</p>
+                <p>Please try again.</p>
+                <button onclick="showUploadForm()" class="upload-submit-btn">Try Again</button>
+            </div>
+        `;
         
         // Hide status after delay
         setTimeout(() => {
