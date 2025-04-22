@@ -1,0 +1,511 @@
+
+/* --- CSS Base & Body --- */    
+body {    
+  display: flex;    
+  justify-content: center;    
+  align-items: center;    
+  min-height: 100vh;    
+  /* Slightly darker grey background */    
+  background-color: #E0E0E0;    
+  font-family: 'Inter', sans-serif;    
+  margin: 0;    
+}    
+    
+/* --- Layout & Responsiveness --- */    
+.container {    
+  display: flex;    
+  width: 90%;    
+  /* Increased max-width for wider design */    
+  max-width: 1300px;    
+  /* Adjusted height slightly */    
+  height: 88vh;    
+  max-height: 750px; /* Limit max height */    
+  /* Main background is now sidebar color */    
+  background: #F3F4F6; /* Match sidebar bg */    
+  /* More pronounced rounding */    
+  border-radius: 16px;    
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);    
+  overflow: hidden; /* Crucial for child border-radius */    
+}    
+    
+/* Sidebar ~65%, Chat ~35% - Adjusted ratio */    
+.sidebar {    
+  flex: 0 0 60%; /* Adjusted flex basis */    
+  background: #F3F4F6; /* Unified light grey */    
+  display: flex;    
+  flex-direction: column;    
+  padding: 25px; /* Increased padding */    
+  overflow-y: auto; /* Allow scrolling if content overflows */    
+  /* Remove border as container provides edge */    
+}    
+    
+.chat-area {    
+  flex: 0 0 40%; /* Adjusted flex basis */    
+  display: flex;    
+  flex-direction: column;    
+  /* Target light yellow background */    
+  background: #fff9dc;    
+  /* Rounded corners matching container */    
+  border-radius: 0 16px 16px 0;    
+  position: relative;    
+  overflow: hidden; /* Ensure children are clipped */    
+}    
+    
+/* Stack on small screens */    
+@media (max-width: 800px) { /* Adjusted breakpoint */    
+  body {    
+    align-items: flex-start; /* Don't center vertically on mobile */    
+  }    
+  .container {    
+    flex-direction: column;    
+    height: 100vh; /* Full height */    
+    width: 100%;    
+    max-height: none;    
+    border-radius: 0;    
+    box-shadow: none;    
+  }    
+  .sidebar {    
+    flex: 0 0 auto; /* Let sidebar take needed height */    
+    /* Increased max-height for mobile */    
+    max-height: 45vh;    
+    border-right: none;    
+    border-bottom: 1px solid #dee2e6;    
+    padding: 15px; /* Adjust padding */    
+    border-radius: 0; /* Remove rounding on mobile */    
+  }    
+  .chat-area {    
+    flex: 1 1 auto; /* Fill remaining space */    
+    height: auto; /* Ensure it can grow */    
+    border-radius: 0; /* Remove rounding on mobile */    
+  }    
+  /* Hide static "Add More Information" if content area is active */    
+  .sidebar.content-active .add-info-text {    
+      display: none;    
+  }    
+  /* Reduce message max-width on mobile */    
+  .message { max-width: 90%; }    
+}    
+    
+/* --- Sidebar inner --- */    
+/* Renamed and restyled header */    
+.sidebar-header {    
+  padding: 12px 20px;    
+  margin-bottom: 25px; /* Increased margin */    
+  background: #E5E7EB; /* Slightly darker grey */    
+  border-radius: 8px;    
+  font-weight: 500; /* Adjusted weight */    
+  font-size: 1.05em; /* Adjusted size */    
+  color: #374151; /* Darker text */    
+  text-align: left; /* Match design */    
+}    
+    
+.navigation {    
+  display: flex;    
+  gap: 12px; /* Increased gap */    
+  flex-wrap: wrap; /* Allow wrapping */    
+  margin-bottom: 20px;    
+}    
+    
+.nav-button {    
+  flex-grow: 1; /* Allow buttons to grow */    
+  flex-basis: 120px; /* Minimum base size */    
+  padding: 10px 18px; /* Adjusted padding */    
+  border: none; /* Removed border */    
+  /* Pill shape */    
+  border-radius: 50px;    
+  background: #E5E7EB; /* Default background */    
+  cursor: pointer;    
+  font-weight: 500;    
+  transition: background-color 0.2s, color 0.2s;    
+  display: flex;    
+  align-items: center;    
+  justify-content: center;    
+  gap: 8px; /* Space between icon and text */    
+  color: #4B5563; /* Default text color */    
+  font-size: 0.95em;    
+}    
+.nav-button svg {    
+  /* Adjusted icon size/stroke */    
+  width: 16px;    
+  height: 16px;    
+  stroke-width: 2;    
+  vertical-align: middle;    
+}    
+    
+/* Target yellow for Upload button */    
+.nav-button.upload {    
+  background: #D9B24A; /* Design's yellow */    
+  color: #374151; /* Darker text on yellow */    
+}    
+/* Icon color for upload button */    
+.nav-button.upload svg {    
+  stroke: #374151;    
+}    
+    
+.nav-button:hover { background: #D1D5DB; } /* Hover for default */    
+.nav-button.upload:hover { background: #c8a03d; } /* Hover for upload */    
+    
+/* Style for the active navigation button (optional, can be removed if not needed) */    
+.nav-button.active {    
+  background-color: #9CA3AF; /* Example active state */    
+  color: #ffffff;    
+}    
+.nav-button.active.upload { /* Keep upload distinctive when active */    
+  background: #c8a03d;    
+  color: #374151;    
+}    
+.nav-button.active.upload svg {    
+  stroke: #374151;    
+}    
+    
+    
+/* Content area inside sidebar */    
+.content-area {    
+  display: none; /* Hidden by default */    
+  flex-grow: 1; /* Take remaining space */    
+  background: #ffffff; /* White background for content */    
+  border: 1px solid #E5E7EB; /* Light border */    
+  border-radius: 8px;    
+  padding: 20px;    
+  overflow-y: auto;    
+  margin-top: 0; /* Remove top margin */    
+  min-height: 150px; /* Ensure it has some minimum height */    
+}    
+.content-area.active {    
+  display: block; /* Show when active */    
+}    
+    
+/* Hide static prompt when content area is active */    
+.content-area.active + .add-info-text {    
+    display: none;    
+}    
+    
+    
+.content-section { display: none; } /* Sections hidden by default */    
+.content-section.active { display: block; } /* Active section shown */    
+    
+.content-section h2 {    
+  margin-top: 0;    
+  margin-bottom: 15px;    
+  font-size: 1.1em; /* Slightly smaller */    
+  color: #1F2937; /* Darker heading */    
+  border-bottom: 1px solid #E5E7EB;    
+  padding-bottom: 10px;    
+}    
+    
+/* Static "Add More Information" text styling */    
+.add-info-text {    
+  color: #6B7280;    
+  padding: 15px 5px;     
+  font-size: 0.9em;    
+  text-align: left;     
+}    
+    
+/* --- Chat area inner --- */    
+.chat-header {    
+  padding: 15px 20px;
+  border-bottom: 1px solid #FDE68A;
+  font-weight: 500;  
+  color: #374151;    
+  display: flex;    
+  justify-content: space-between;    
+  align-items: center;    
+  flex-shrink: 0;
+}    
+    
+/* Styling for the 3x3 dot menu icon */    
+.chat-header-menu {    
+    cursor: pointer;    
+    width: 24px; /* Container size */    
+    height: 24px;    
+    display: grid;    
+    grid-template-columns: repeat(3, 1fr);    
+    gap: 3px; /* Space between dots */    
+    align-items: center;    
+    justify-items: center;    
+}    
+.chat-header-menu span {    
+    width: 4px; /* Dot size */    
+    height: 4px;    
+    background-color: #9CA3AF; /* Dot color */    
+    border-radius: 50%;    
+    display: block;    
+}    
+    
+.chat-messages {    
+  flex-grow: 1;    
+  padding: 20px;    
+  overflow-y: auto;    
+  display: flex;    
+  flex-direction: column;    
+  gap: 12px; /* Slightly reduced gap */    
+  scroll-behavior: smooth;    
+}    
+    
+.input-area {    
+  display: flex;    
+  align-items: center;
+  padding: 15px 20px;
+  background: #ffffff; 
+  flex-shrink: 0; 
+  border-radius: 0 0 16px 0;    
+  border-top: 1px solid #F3F4F6;
+}    
+    
+.message-input {    
+  flex-grow: 1;    
+  padding: 10px 18px; 
+  border-radius: 50px;    
+  border: 1px solid #D1D5DB;
+  font-size: 0.95rem;     
+  min-height: 35px; 
+  resize: none;    
+  line-height: 1.4;    
+  background-color: #fff;
+  color: #1F2937;
+  min-width: 0;    
+}    
+.message-input:focus {    
+    outline: none;    
+    border-color: #A5B4FC; /* Example focus color */    
+    box-shadow: 0 0 0 2px rgba(199, 210, 254, 0.5); /* Example focus shadow */    
+}    
+/* Remove placeholder styling as it's empty */    
+.message-input::placeholder {    
+  color: #9CA3AF;    
+}    
+    
+    
+.send-button {    
+  margin-left: 10px;    
+  padding: 10px 20px; /* Adjusted padding */    
+  border: none;    
+  /* Pill shape */    
+  border-radius: 50px;    
+  /* Target yellow */    
+  background: #D9B24A;    
+  color: #374151; /* Darker text */    
+  font-weight: 500;    
+  cursor: pointer;    
+  transition: background-color 0.2s;    
+  flex-shrink: 0; /* Prevent button shrinking */    
+  font-size: 0.95rem; /* Match input */    
+}    
+.send-button:hover { background: #c8a03d; }    
+.send-button:disabled {    
+    background-color: #D1D5DB; /* Disabled grey */    
+    color: #9CA3AF;    
+    cursor: not-allowed;    
+}    
+    
+/* --- Message Styles --- */    
+.message {    
+  padding: 10px 15px; /* Standard padding */    
+  border-radius: 15px; /* Standard rounding */    
+  max-width: 80%; /* Max width */    
+  line-height: 1.5; /* Improved line height */    
+  word-wrap: break-word;    
+  font-size: 0.95em; /* Consistent font size */    
+}    
+    
+.user-message {    
+  /* Target beige/yellow */    
+  background-color: #FEF0C7;    
+  color: #374151; /* Dark text */    
+  /* Slightly different rounding */    
+  border-bottom-right-radius: 5px;    
+  align-self: flex-end; /* Align user messages to the right */    
+  margin-left: auto; /* Push to right */    
+}    
+    
+.ai-message {    
+  /* Target lighter yellow/off-white */    
+  background-color: #FFF9E6;    
+  color: #374151; /* Dark text */    
+  /* Slightly different rounding */    
+  border-bottom-left-radius: 5px;    
+  align-self: flex-start; /* Align AI messages to the left */    
+  margin-right: auto; /* Push to left */    
+  /* Style for links inside AI messages */    
+  border: 1px solid #FEF9C3; /* Subtle border */    
+}    
+.ai-message ul {    
+    padding-left: 20px; /* Indent list */    
+    margin-top: 8px;    
+    margin-bottom: 5px;    
+}    
+.ai-message li {    
+    margin-bottom: 5px;    
+}    
+.ai-message a {    
+    color: #065F46; /* Example link color */    
+    text-decoration: underline;    
+    word-break: break-all; /* Break long links */    
+}    
+.ai-message a:hover {    
+    color: #047857;    
+}    
+    
+    
+/* --- Typing Indicator (Keep as is) --- */    
+.typing-indicator {    
+  padding: 12px 15px; /* Match message padding */    
+}    
+.typing-indicator span {    
+  display: inline-block;    
+  width: 8px;    
+  height: 8px;    
+  margin: 0 2px;    
+  background-color: #9CA3AF; /* Use a theme color */    
+  border-radius: 50%;    
+  animation: typing 1s infinite ease-in-out;    
+}    
+.typing-indicator span:nth-child(1) { animation-delay: 0s; }    
+.typing-indicator span:nth-child(2) { animation-delay: 0.1s; }    
+.typing-indicator span:nth-child(3) { animation-delay: 0.2s; }    
+    
+@keyframes typing {    
+  0%, 100% { opacity: 0.3; transform: translateY(0); }    
+  50% { opacity: 1; transform: translateY(-4px); } /* Slightly more bounce */    
+}    
+    
+/* --- Content Section Specific Styles --- */    
+.loading-indicator, .info-message {    
+    padding: 15px;    
+    text-align: center;    
+    color: #4B5563; /* Adjusted text color */    
+    background-color: #F3F4F6; /* Match sidebar bg */    
+    border-radius: 6px; /* Consistent rounding */    
+    margin-top: 10px;    
+    font-size: 0.9em;    
+}    
+.info-message.error { background-color: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }    
+.info-message.success { background-color: #F0FDF4; color: #14532D; border: 1px solid #BBF7D0; }    
+    
+.faq-item, .products-list .faq-item {    
+    margin-bottom: 15px;    
+    padding-bottom: 15px; /* Increased padding */    
+    border-bottom: 1px solid #E5E7EB; /* Lighter border */    
+}    
+.faq-item:last-child {    
+    border-bottom: none;    
+    margin-bottom: 0;    
+    padding-bottom: 0;    
+}    
+.faq-question {    
+    font-weight: 600;    
+    color: #1F2937; /* Darker question text */    
+    margin-bottom: 8px; /* Increased space */    
+    font-size: 1em;    
+}    
+.faq-answer {    
+    color: #4B5563; /* Answer text color */    
+    font-size: 0.95em;    
+    line-height: 1.6; /* Improved line height */    
+}    
+.faq-answer p { margin: 5px 0; }    
+.faq-answer strong { color: #374151; }    
+    
+/* --- Upload Form Styles (Minor tweaks) --- */    
+.upload-form-container {    
+    padding: 10px;    
+}    
+.upload-form-container h2 { margin-bottom: 10px; }    
+.upload-form-container p { margin-bottom: 15px; color: #4B5563; font-size: 0.9em; }    
+    
+.form-group {    
+    margin-bottom: 15px;    
+}    
+.form-group label {    
+    display: block;    
+    margin-bottom: 5px;    
+    font-weight: 500;    
+    color: #374151; /* Darker label */    
+    font-size: 0.9em;    
+}    
+.form-group input[type="text"],    
+.form-group input[type="file"] {    
+    width: 100%;    
+    padding: 9px 12px; 
+    border: 1px solid #D1D5DB; 
+    border-radius: 6px;
+    box-sizing: border-box;    
+    font-size: 0.95em;    
+}    
+.form-group input[type="file"] {    
+    padding: 5px;    
+}    
+.form-group small {    
+    display: block;    
+    margin-top: 6px;    
+    color: #6B7280;    
+    font-size: 0.85em;    
+}    
+    
+.upload-submit-btn {    
+    padding: 10px 20px;    
+    border: none;    
+    border-radius: 6px;
+    background: #10B981;  
+    color: #fff;    
+    font-weight: 500;    
+    cursor: pointer;    
+    transition: background-color 0.2s;    
+    font-size: 0.95em;    
+}    
+.upload-submit-btn:hover {    
+    background: #059669;    
+}    
+/* Style for try again button inside error message */    
+.info-message.error .upload-submit-btn {    
+    background-color: #EF4444; /* Red for retry */    
+    margin-top: 10px;    
+}    
+.info-message.error .upload-submit-btn:hover {    
+     background-color: #DC2626;    
+}    
+    
+    
+/* --- Upload Status Indicator (Keep as is) --- */    
+.upload-status {    
+    position: fixed;    
+    bottom: 20px;    
+    left: 50%;    
+    transform: translateX(-50%);    
+    padding: 10px 25px;    
+    background-color: rgba(17, 24, 39, 0.8);  
+    color: white;    
+    border-radius: 20px;    
+    font-size: 0.9em;    
+    z-index: 1000;    
+    display: none;  
+    white-space: nowrap;    
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);    
+}    
+.upload-status.success { background-color: #10B981; } 
+.upload-status.error { background-color: #EF4444; }
+
+
+
+
+
+/* === In style.css === */
+
+/* ... other styles ... */
+
+.
+
+.
+
+.
+
+/* ... rest of the styles ... */
+
+/* === Remove or Comment Out Old Rules === */
+/* If you had these specific rules before, make sure they aren't interfering */
+/*
+.chat-input { ... }
+.chat-input-container { ... }
+*/
+/* Make sure the new .message-input and .input-area rules replace any similar old ones */;
+}
