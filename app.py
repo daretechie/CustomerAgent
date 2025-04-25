@@ -1,24 +1,34 @@
 # app.py
+from flask import Flask
+import os
 
-from flask import Flask, render_template, url_for
+# Import modules
+from config import Config
+import database
+import routes
 
-# Create a Flask application instance
-app = Flask(__name__)
+def create_app(config_class=Config):
+    """Creates and configures the Flask application."""
+    app = Flask(__name__, static_folder='static', template_folder='templates')
+    app.config.from_object(config_class)
 
-# Define a route for the homepage
-@app.route('/')
-def index():
-    """
-    Renders the main index page of the customer service AI interface.
-    Fetches a dynamic business name (placeholder for now) and passes it
-    to the HTML template.
-    """
-    # In a real application, you would fetch the business name dynamically.
-    # This could come from a database, a configuration file, or user input.
-    dynamic_business_name = "Your Dynamic Business Name Here" # Replace with actual logic
+    # Ensure instance folder exists (if needed for Flask session files, etc.)
+    try:
+        os.makedirs(app.instance_path, exist_ok=True)
+    except OSError:
+        pass
 
-    # Render the index.html template and pass the business name
-    return render_template('index.html', business_name=dynamic_business_name)
+    # Initialize Database
+    with app.app_context():
+        database.init_db_command(app) # Register 'flask init-db' command
+        app.teardown_appcontext(database.close_db) # Register teardown function
 
-if __name__ == '__main__':
-    app.run(debug=True)
+    # Register Blueprints (for routes)
+    app.register_blueprint(routes.bp)
+
+    # Basic check route (optional)
+    @app.route('/hello')
+    def hello():
+        return "Hello, World! App is running."
+
+    return app
